@@ -10,7 +10,7 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ftp://nt14.unoeuro.com:21/public_html/
+        server: //nt14.unoeuro.com:21/public_html/
         username: da9elbonde.dk
         password: ${{ secrets.ftp_password }}
         server-dir: git/
