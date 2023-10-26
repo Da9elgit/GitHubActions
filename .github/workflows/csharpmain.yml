@@ -1,6 +1,6 @@
-Workflows YML filen
+#Workflows YML filen
 
-Filen som laver hele arbejdet oppe hos GitHub Actions ser sådan ud.
+#Filen som laver hele arbejdet oppe hos GitHub Actions ser sådan ud.
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 # ---- Denne virker fint. Kræver dog at jeg først fra IIS manager RECYCLE app pool. ---------------
@@ -36,9 +36,9 @@ jobs:
       shell: python
       run: |
         import ftplib
-        with ftplib.FTP('nt1.unoeuro.com') as ftp:
-          ftp.login('junoeuro.dk', '${{ secrets.ftp_password }}')
-          ftp.cwd('/githubactionstest1')
+        with ftplib.FTP(${{ secrets.ftp_server }}) as ftp:
+          ftp.login(${{ secrets.ftp_password }}, ${{ secrets.ftp_password }})
+          ftp.cwd('git/')
           ftp.rename('_app_offline.htm', 'app_offline.htm')
           ftp.quit()
  
@@ -47,20 +47,20 @@ jobs:
     - name: Upload from public_html 
       uses: SamKirkland/FTP-Deploy-Action@4.3.3
       with:
-        local-dir: ./myFolderToPublish/
-        server: nt14.unoeuro.com
-        username: junoeuro.dk
+        local-dir: C:\Users\power\source\repos\GitHubActions
+        server: @{{ secrets.ftp_server }}
+        username: @{{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        server-dir: githubactionstest1/ 
+        server-dir: git/ 
         dangerous-clean-slate: false
 
     - name: Rename app_offline.htm back to _app_offline.htm to start the site
       shell: python
       run: |
         import ftplib
-        with ftplib.FTP('nt14.unoeuro.com') as ftp:
-          ftp.login('junoeuro.dk', '${{ secrets.ftp_password }}')
-          ftp.cwd('/githubactionstest1')
+        with ftplib.FTP(@{{ secrets.ftp_server }}) as ftp:
+          ftp.login(@{{ secrets.ftp_username }}, '${{ secrets.ftp_password }}')
+          ftp.cwd('git/')
           ftp.rename('app_offline.htm', '_app_offline.htm')
           ftp.quit()
 
